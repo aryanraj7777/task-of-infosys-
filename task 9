@@ -1,0 +1,26 @@
+Task 9: Verify-Users-By-Id API implementation in Employers Viewset
+
+To implement the verify-users-by-id API in the Employers Viewset, we can add a new method to the EmployersViewSet class.
+
+# employers/views.py
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+from.models import Employer
+from.serializers import EmployerSerializer
+from users.models import User
+
+class EmployersViewSet(ModelViewSet):
+    queryset = Employer.objects.all()
+    serializer_class = EmployerSerializer
+
+    #... (other methods)
+
+    def verify_user_by_id(self, request, pk):
+        user = User.objects.get(pk=pk)
+        if user:
+            user.is_verified = True
+            user.save()
+            return Response({'message': 'User verified successfully'})
+        return Response({'message': 'User not found'}, status=404)
+
+In the above code, we've added a new method verify_user_by_id to the EmployersViewSet class. This method takes a pk parameter, which is the ID of the user to be verified. It fetches the user instance using the User model, sets the is_verified field to True, and saves the changes. If the user is found, it returns a success response with a message. If the user is not found, it returns a 404 response with an error message.
