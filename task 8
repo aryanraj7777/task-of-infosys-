@@ -1,0 +1,27 @@
+Task 8: Get-Verified-Users and Get-Unverified-Users API's implementation in Employers Viewset
+
+To implement the get-verified-users and get-unverified-users APIs in the Employers Viewset, we can add two new methods to the EmployersViewSet class
+
+
+# employers/views.py
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+from.models import Employer
+from.serializers import EmployerSerializer
+from users.models import User
+
+class EmployersViewSet(ModelViewSet):
+    queryset = Employer.objects.all()
+    serializer_class = EmployerSerializer
+
+    def get_verified_users(self, request):
+        verified_users = User.objects.filter(is_verified=True)
+        serializer = UserSerializer(verified_users, many=True)
+        return Response(serializer.data)
+
+    def get_unverified_users(self, request):
+        unverified_users = User.objects.filter(is_verified=False)
+        serializer = UserSerializer(unverified_users, many=True)
+        return Response(serializer.data)
+
+In the above code, we've added two new methods get_verified_users and get_unverified_users to the EmployersViewSet class. These methods use the User model to fetch verified and unverified users, respectively, and serialize the data using the UserSerializer. The serialized data is then returned as a response.
